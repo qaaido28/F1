@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>F1 Hub - The Ultimate Formula 1 Destination</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Inter font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <!-- Custom Styles -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #121212; /* Dark background */
+            color: #E5E7EB; /* Light text */
+        }
+        /* Custom gradient text */
+        .text-gradient {
+            background: linear-gradient(90deg, #FF1801, #E00600);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        /* Custom red button */
+        .btn-red {
+            background-color: #E00600;
+            transition: background-color 0.3s ease;
+        }
+        .btn-red:hover {
+            background-color: #FF1801;
+        }
+        /* Custom card background */
+        .card-bg {
+            background-color: #1E1E1E;
+            border: 1px solid #333333;
+        }
+        /* Team color indicators */
+        .team-mclaren { border-left-color: #FF8700 !important; }
+        .team-redbull { border-left-color: #3671C6 !important; }
+        .team-ferrari { border-left-color: #E8002D !important; }
+        .team-mercedes { border-left-color: #27F4D2 !important; }
+        .team-williams { border-left-color: #00A3E0 !important; }
+        .team-racingbulls { border-left-color: #6692FF !important; }
+        .team-astonmartin { border-left-color: #006F62 !important; }
+        .team-haas { border-left-color: #B6BABD !important; }
+        .team-sauber { border-left-color: #52E252 !important; }
+        .team-alpine { border-left-color: #0090FF !important; }
+
+        /* Scroll Animation */
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Team Card Styles */
+        .team-card-bg {
+            background-color: #1E1E1E;
+            border: 1px solid #333333;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .team-card-bg:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Team Card Borders */
+        .team-card-mclaren { border-top: 4px solid #FF8700; }
+        .team-card-redbull { border-top: 4px solid #3671C6; }
+        .team-card-ferrari { border-top: 4px solid #E8002D; }
+        .team-card-mercedes { border-top: 4px solid #27F4D2; }
+        .team-card-williams { border-top: 4px solid #00A3E0; }
+        .team-card-racingbulls { border-top: 4px solid #6692FF; }
+        .team-card-astonmartin { border-top: 4px solid #006F62; }
+        .team-card-haas { border-top: 4px solid #B6BABD; }
+        .team-card-sauber { border-top: 4px solid #52E252; }
+        .team-card-alpine { border-top: 4px solid #0090FF; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Navigation -->
+    <header class="bg-black/80 backdrop-blur-sm sticky top-0 z-50 border-b border-gray-800">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0">
+                    <a href="#" class="text-3xl font-black text-gradient">F1 HUB</a>
+                </div>
+                
+                <!-- Desktop Nav -->
+                <div class="hidden md:flex md:items-center md:space-x-8">
+                    <a href="#news" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">News</a>
+                    <a href="#video" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Video</a>
+                    <a href="#standings" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Standings</a>
+                    <a href="#schedule" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Schedule</a>
+                    <a href="#teams" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Teams</a>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+                        <span class="sr-only">Open main menu</span>
+                        <!-- Icon when menu is closed. -->
+                        <svg id="menu-icon-closed" class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                        </svg>
+                        <!-- Icon when menu is open. -->
+                        <svg id="menu-icon-open" class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="md:hidden hidden">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#news" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">News</a>
+                <a href="#video" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Video</a>
+                <a href="#standings" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Standings</a>
+                <a href="#schedule" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Schedule</a>
+                <a href="#teams" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Teams</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- Hero Section -->
+        <section class="text-center my-12 fade-in-section">
+            <h1 class="text-4xl sm:text-6xl lg:text-7xl font-black uppercase tracking-tighter">
+                NORRIS <span class="text-gradient">SEIZES LEAD</span>
+            </h1>
+            <p class="mt-4 text-xl sm:text-2xl text-gray-400 max-w-3xl mx-auto">
+                The F1 title fight ignites as Lando Norris leads a tight three-way battle with teammate Piastri and Verstappen.
+            </p>
+        </section>
+
+        <!-- News Section -->
+        <section id="news" class="mb-16 fade-in-section">
+            <h2 class="text-3xl font-bold mb-6 border-l-4 border-red-600 pl-4">Latest News</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Main Story -->
+                <div class="md:col-span-2 card-bg rounded-lg shadow-lg overflow-hidden">
+                    <img src="https://placehold.co/800x400/1E1E1E/E00600?text=Norris+Wins+in+Mexico!" alt="F1 car racing on track" class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <span class="text-red-500 text-sm font-semibold">RACE REPORT</span>
+                        <h3 class="text-2xl font-bold mt-2 mb-3">Norris Dominates in Mexico to Lead Piastri by One Point</h3>
+                        <p class="text-gray-400 mb-4">
+                            Lando Norris delivered a masterful performance at the Mexico City Grand Prix, converting pole to a dominant victory. His teammate Oscar Piastri struggled to 5th, allowing Norris to take a one-point lead in the Drivers' Championship. Max Verstappen finished 3rd, keeping himself firmly in the title fight.
+                        </p>
+                        <a href="#" class="btn-red text-white font-bold py-2 px-4 rounded-lg">Read Full Story</a>
+                    </div>
+                </div>
+                
+                <!-- Side Stories -->
+                <div class="space-y-6">
+                    <div class="card-bg rounded-lg shadow-lg p-6">
+                        <span class="text-red-500 text-sm font-semibold">CHAMPIONSHIP</span>
+                        <h3 class="text-xl font-bold mt-2 mb-3">McLaren Clinches 2025 Constructors' Title!</h3>
+                        <p class="text-gray-400 text-sm">
+                            With an incredible season from Norris and Piastri, McLaren has officially secured the 2025 Constructors' Championship, their first since 1998.
+                        </p>
+                    </div>
+                    <div class="card-bg rounded-lg shadow-lg p-6">
+                        <span class="text-red-500 text-sm font-semibold">TITLE FIGHT</span>
+                        <h3 class="text-xl font-bold mt-2 mb-3">Down to the Wire: 4 Races Left</h3>
+                        <p class="text-gray-400 text-sm">
+                            Only 36 points separate the top three drivers. With four races remaining, the battle for the driver's crown is set for an epic finale.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Video Highlights Section -->
+        <section id="video" class="mb-16 fade-in-section">
+            <h2 class="text-3xl font-bold mb-6 border-l-4 border-red-600 pl-4">Race Highlights</h2>
+            <div class="card-bg rounded-lg shadow-lg overflow-hidden">
+                <!-- Image Container -->
+                <img 
+                    src="f1.jpg" 
+                    alt="F1 Race Action" 
+                    class="w-full h-auto max-h-[450px] object-cover rounded-t-lg"
+                    onerror="this.onerror=null; this.src='https://placehold.co/800x450/1E1E1E/E00600?text=F1+Highlights';">
+                
+                <div class="p-6">
+                    <h3 class="text-2xl font-bold mb-2">Relive the Action: Mexico City GP</h3>
+                    <p class="text-gray-400">Watch the key moments as Norris, Verstappen, and Piastri battle it out in an unforgettable race.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Standings & Schedule -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16 fade-in-section">
+            <!-- Standings Section -->
+            <section id="standings" class="lg:col-span-2">
+                <h2 class="text-3xl font-bold mb-6 border-l-4 border-red-600 pl-4">2025 Standings</h2>
+                
+                <!-- Tabs -->
+                <div>
+                    <div class="border-b border-gray-700">
+                        <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+                            <button id="tab-drivers" class="tab-button border-red-500 text-white whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                                Drivers
+                            </button>
+                            <button id="tab-constructors" class="tab-button border-transparent text-gray-500 hover:text-gray-300 hover:border-gray-500 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                                Constructors
+                            </button>
+                        </nav>
+                    </div>
+                </div>
+
+                <!-- Drivers Tab Content -->
+                <div id="content-drivers" class="tab-content mt-6">
+                    <div class="flow-root">
+                        <ul role="list" class="divide-y divide-gray-700">
+                            <!-- Standings Headers -->
+                            <li class="py-3 px-4">
+                                <div class="grid grid-cols-12 gap-4">
+                                    <div class="col-span-1 text-xs font-semibold text-gray-400 uppercase">Pos</div>
+                                    <div class="col-span-6 text-xs font-semibold text-gray-400 uppercase">Driver</div>
+                                    <div class="col-span-3 text-xs font-semibold text-gray-400 uppercase">Team</div>
+                                    <div class="col-span-2 text-xs font-semibold text-gray-400 uppercase text-right">Pts</div>
+                                </div>
+                            </li>
+                            <!-- Driver 1 -->
+                            <li class="py-4 px-4 card-bg rounded-lg my-2 border-l-4 team-mclaren">
+                                <div class="grid grid-cols-12 gap-4 items-center">
+                                    <div class="col-span-1 text-xl font-bold">1</div>
+                                    <div class="col-span-6 text-lg font-semibold">Lando Norris</div>
+                                    <div class="col-span-3 text-sm text-gray-300">McLaren</div>
+                                    <div class="col-span-2 text-lg font-bold text-right">357</div>
+                                </div>
+                            </li>
+                            <!-- Driver 2 -->
+                            <li class="py-4 px-4 card-bg rounded-lg my-2 border-l-4 team-mclaren">
+                                <div class="grid grid-cols-12 gap-4 items-center">
+                                    <div class="col-span-1 text-xl font-bold">2</div>
+                                    <div class="col-span-6 text-lg font-semibold">Oscar Piastri</div>
+                                    <div class="col-span-3 text-sm text-gray-300">McLaren</div>
+                                    <div class="col-span-2 text-lg font-bold text-right">356</div>
+                                </div>
+                            </li>
+                            <!-- Driver 3 -->
+                            <li class="py-4 px-4 card-bg rounded-lg my-2 border-l-4 team-redbull">
+                                <div class="grid grid-cols-12 gap-4 items-center">
+                                    <div class="col-span-1 text-xl font-bold">3</div>
+                                    <div class="col-span-6 text-lg font-semibold">Max Verstappen</div>
+                                    <div class="col-span-3 text-sm text-gray-300">Red Bull</div>
+                                    <div class="col-span-2 text-lg font-bold text-right">321</div>
+                                </div>
+                            </li>
+                            <!-- Other Drivers... -->
+                            <li class="py-3 px-4 rounded-lg">
+                                <div class="grid grid-cols-12 gap-4 items-center text-gray-400">
+                                    <div class="col-span-1 font-semibold">4</div><div class="col-span-6">George Russell</div><div class="col-span-3 text-sm">Mercedes</div><div class="col-span-2 text-right font-semibold">258</div>
+                                </div>
+                            </li>
+                            <li class="py-3 px-4 rounded-lg">
+                                <div class="grid grid-cols-12 gap-4 items-center text-gray-400">
+                                    <div class="col-span-1 font-semibold">5</div><div class="col-span-6">Charles Leclerc</div><div class="col-span-3 text-sm">Ferrari</div><div class="col-span-2 text-right font-semibold">210</div>
+                                </div>
+                            </li>
+                            <li class="py-3 px-4 rounded-lg">
+                                <div class="grid grid-cols-12 gap-4 items-center text-gray-400">
+                                    <div class="col-span-1 font-semibold">6</div><div class="col-span-6">Lewis Hamilton</div><div class="col-span-3 text-sm">Ferrari</div><div class="col-span-2 text-right font-semibold">146</div>
+                                </div>
+                            </li>
+                            <li class="py-3 px-4 rounded-lg">
+                                <div class="grid grid-cols-12 gap-4 items-center text-gray-400">
+                                    <div class="col-span-1 font-semibold">7</div><div class="col-span-6">Kimi Antonelli</div><div class="col-span-3 text-sm">Mercedes</div><div class="col-span-2 text-right font-semibold">97</div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Constructors Tab Content -->
+                <div id="content-constructors" class="tab-content mt-6 hidden">
+                    <div class="flow-root">
+                        <ul role="list" class="divide-y divide-gray-700">
+                            <!-- Headers -->
+                            <li class="py-3 px-4">
+                                <div class="grid grid-cols-12 gap-4">
+                                    <div class="col-span-1 text-xs font-semibold text-gray-400 uppercase">Pos</div>
+                                    <div class="col-span-8 text-xs font-semibold text-gray-400 uppercase">Team</div>
+                                    <div class="col-span-3 text-xs font-semibold text-gray-400 uppercase text-right">Pts</div>
+                                </div>
+                            </li>
+                            <!-- Team 1 -->
+                            <li class="py-4 px-4 card-bg rounded-lg my-2 border-l-4 team-mclaren">
+                                <div class="grid grid-cols-12 gap-4 items-center">
+                                    <div class="col-span-1 text-xl font-bold">1</div>
+                                    <div class="col-span-8 text-lg font-semibold">McLaren <span class="text-sm text-yellow-400 font-bold ml-2">CHAMPIONS</span></div>
+                                    <div class="col-span-3 text-lg font-bold text-right">713</div>
+                                </div>
+                            </li>
+                            <!-- Team 2 -->
+                            <li class="py-4 px-4 card-bg rounded-lg my-2 border-l-4 team-ferrari">
+                                <div class="grid grid-cols-12 gap-4 items-center">
+                                    <div class="col-span-1 text-xl font-bold">2</div>
+                                    <div class="col-span-8 text-lg font-semibold">Ferrari</div>
+                                    <div class="col-span-3 text-lg font-bold text-right">356</div>
+                                </div>
+                            </li>
+                            <!-- Team 3 -->
+                            <li class="py-4 px-4 card-bg rounded-lg my-2 border-l-4 team-mercedes">
+                                <div class="grid grid-cols-12 gap-4 items-center">
+                                    <div class="col-span-1 text-xl font-bold">3</div>
+                                    <div class="col-span-8 text-lg font-semibold">Mercedes</div>
+                                    <div class="col-span-3 text-lg font-bold text-right">355</div>
+                                </div>
+                            </li>
+                            <!-- Other Teams... -->
+                            <li class="py-3 px-4 rounded-lg">
+                                <div class="grid grid-cols-12 gap-4 items-center text-gray-400 border-l-4 border-transparent team-redbull">
+                                    <div class="col-span-1 font-semibold">4</div><div class="col-span-8">Red Bull Racing</div><div class="col-span-3 text-right font-semibold">346</div>
+                                </div>
+                            </li>
+                            <li class="py-3 px-4 rounded-lg">
+                                <div class="grid grid-cols-12 gap-4 items-center text-gray-400 border-l-4 border-transparent team-williams">
+                                    <div class="col-span-1 font-semibold">5</div><div class="col-span-8">Williams</div><div class="col-span-3 text-right font-semibold">111</div>
+                                </div>
+                            </li>
+                            <li class="py-3 px-4 rounded-lg">
+                                <div class="grid grid-cols-12 gap-4 items-center text-gray-400 border-l-4 border-transparent team-racingbulls">
+                                    <div class="col-span-1 font-semibold">6</div><div class="col-span-8">Racing Bulls</div><div class="col-span-3 text-right font-semibold">72</div>
+                                </div>
+                            </li>
+                             <li class="py-3 px-4 rounded-lg">
+                                <div class="grid grid-cols-12 gap-4 items-center text-gray-400 border-l-4 border-transparent team-astonmartin">
+                                    <div class="col-span-1 font-semibold">7</div><div class="col-span-8">Aston Martin</div><div class="col-span-3 text-right font-semibold">69</div>
+                                </div>
+                            </li>
+                            <li class="py-3 px-4 rounded-lg">
+                                <div class="grid grid-cols-12 gap-4 items-center text-gray-400 border-l-4 border-transparent team-haas">
+                                    <div class="col-span-1 font-semibold">8</div><div class="col-span-8">Haas</div><div class="col-span-3 text-right font-semibold">62</div>
+                                </div>
+                            </li>
+                            <li class="py-3 px-4 rounded-lg">
+                                <div class="grid grid-cols-12 gap-4 items-center text-gray-400 border-l-4 border-transparent team-sauber">
+                                    <div class="col-span-1 font-semibold">9</div><div class="col-span-8">Kick Sauber</div><div class="col-span-3 text-right font-semibold">60</div>
+                                </div>
+                            </li>
+                            <li class="py-3 px-4 rounded-lg">
+                                <div class="grid grid-cols-12 gap-4 items-center text-gray-400 border-l-4 border-transparent team-alpine">
+                                    <div class="col-span-1 font-semibold">10</div><div class="col-span-8">Alpine</div><div class="col-span-3 text-right font-semibold">20</div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- Schedule Section -->
+            <section id="schedule">
+                <h2 class="text-3xl font-bold mb-6 border-l-4 border-red-600 pl-4">Race Schedule</h2>
+                <div class="space-y-6">
+                    <!-- Up Next -->
+                    <div class="card-bg rounded-lg shadow-lg overflow-hidden">
+                        <div class="p-6">
+                            <span class="text-red-500 text-sm font-semibold">UP NEXT</span>
+                            <h3 class="text-2xl font-bold mt-2 mb-1">São Paulo Grand Prix</h3>
+                            <p class="text-lg text-gray-300 mb-4">Interlagos</p>
+                            <div class="text-4xl font-black text-white">NOV 07-09</div>
+                        </div>
+                        <img src="https://placehold.co/600x300/1E1E1E/E00600?text=Brazil+GP" alt="Brazil map" class="w-full h-32 object-cover opacity-60">
+                    </div>
+                    
+                    <!-- Remaining Races -->
+                    <div class="card-bg rounded-lg shadow-lg p-6">
+                        <h4 class="text-lg font-bold mb-4">Remaining Races</h4>
+                        <ul class="space-y-3">
+                            <li class="flex justify-between items-center">
+                                <span class="font-semibold">Las Vegas GP</span>
+                                <span class="text-sm text-gray-400">Nov 20-22</span>
+                            </li>
+                            <li class="flex justify-between items-center">
+                                <span class="font-semibold">Qatar GP</span>
+                                <span class="text-sm text-gray-400">Nov 28-30</span>
+                            </li>
+                            <li class="flex justify-between items-center">
+                                <span class="font-semibold">Abu Dhabi GP</span>
+                                <span class="text-sm text-gray-400">Dec 05-07</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Teams Section -->
+        <section id="teams" class="mb-16 fade-in-section">
+            <h2 class="text-3xl font-bold mb-6 border-l-4 border-red-600 pl-4">The 2025 Grid</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                <!-- Team 1: McLaren -->
+                <div class="team-card-bg rounded-lg shadow-lg team-card-mclaren">
+                    <div class="p-6 text-center">
+                        <img src="https://placehold.co/100x50/1E1E1E/FF8700?text=McLaren&font=inter" alt="McLaren Logo" class="h-12 w-auto mx-auto mb-4 rounded">
+                        <h3 class="text-xl font-bold mb-2">McLaren</h3>
+                        <p class="text-sm text-gray-400">Lando Norris</p>
+                        <p class="text-sm text-gray-400">Oscar Piastri</p>
+                    </div>
+                </div>
+                <!-- Team 2: Ferrari -->
+                <div class="team-card-bg rounded-lg shadow-lg team-card-ferrari">
+                    <div class="p-6 text-center">
+                        <img src="https://placehold.co/100x50/1E1E1E/E8002D?text=Ferrari&font=inter" alt="Ferrari Logo" class="h-12 w-auto mx-auto mb-4 rounded">
+                        <h3 class="text-xl font-bold mb-2">Ferrari</h3>
+                        <p class="text-sm text-gray-400">Charles Leclerc</p>
+                        <p class="text-sm text-gray-400">Lewis Hamilton</p>
+                    </div>
+                </div>
+                <!-- Team 3: Mercedes -->
+                <div class="team-card-bg rounded-lg shadow-lg team-card-mercedes">
+                    <div class="p-6 text-center">
+                        <img src="https://placehold.co/100x50/1E1E1E/27F4D2?text=Mercedes&font=inter" alt="Mercedes Logo" class="h-12 w-auto mx-auto mb-4 rounded">
+                        <h3 class="text-xl font-bold mb-2">Mercedes</h3>
+                        <p class="text-sm text-gray-400">George Russell</p>
+                        <p class="text-sm text-gray-400">Kimi Antonelli</p>
+                    </div>
+                </div>
+                <!-- Team 4: Red Bull -->
+                <div class="team-card-bg rounded-lg shadow-lg team-card-redbull">
+                    <div class="p-6 text-center">
+                        <img src="httpsD/placehold.co/100x50/1E1E1E/3671C6?text=Red+Bull&font=inter" alt="Red Bull Logo" class="h-12 w-auto mx-auto mb-4 rounded">
+                        <h3 class="text-xl font-bold mb-2">Red Bull Racing</h3>
+                        <p class="text-sm text-gray-400">Max Verstappen</p>
+                        <p class="text-sm text-gray-400">Yuki Tsunoda</p>
+                    </div>
+                </div>
+                <!-- Team 5: Williams -->
+                <div class="team-card-bg rounded-lg shadow-lg team-card-williams">
+                    <div class="p-6 text-center">
+                        <img src="https://placehold.co/100x50/1E1E1E/00A3E0?text=Williams&font=inter" alt="Williams Logo" class="h-12 w-auto mx-auto mb-4 rounded">
+                        <h3 class="text-xl font-bold mb-2">Williams</h3>
+                        <p class="text-sm text-gray-400">Alex Albon</p>
+                        <p class="text-sm text-gray-400">Carlos Sainz</p>
+                    </div>
+                </div>
+                <!-- Team 6: Racing Bulls -->
+                <div class="team-card-bg rounded-lg shadow-lg team-card-racingbulls">
+                    <div class="p-6 text-center">
+                        <img src="https://placehold.co/100x50/1E1E1E/6692FF?text=Racing+Bulls&font=inter" alt="Racing Bulls Logo" class="h-12 w-auto mx-auto mb-4 rounded">
+                        <h3 class="text-xl font-bold mb-2">Racing Bulls</h3>
+                        <p class="text-sm text-gray-400">Isack Hadjar</p>
+                        <p class="text-sm text-gray-400">Liam Lawson</p>
+                    </div>
+                </div>
+                <!-- Team 7: Aston Martin -->
+                <div class="team-card-bg rounded-lg shadow-lg team-card-astonmartin">
+                    <div class="p-6 text-center">
+                        <img src="https://placehold.co/100x50/1E1E1E/006F62?text=Aston+Martin&font=inter" alt="Aston Martin Logo" class="h-12 w-auto mx-auto mb-4 rounded">
+                        <h3 class="text-xl font-bold mb-2">Aston Martin</h3>
+                        <p class="text-sm text-gray-400">Fernando Alonso</p>
+                        <p class="text-sm text-gray-400">Lance Stroll</p>
+                    </div>
+                </div>
+                <!-- Team 8: Haas -->
+                <div class="team-card-bg rounded-lg shadow-lg team-card-haas">
+                    <div class="p-6 text-center">
+                        <img src="https://placehold.co/100x50/1E1E1E/B6BABD?text=Haas&font=inter" alt="Haas Logo" class="h-12 w-auto mx-auto mb-4 rounded">
+                        <h3 class="text-xl font-bold mb-2">Haas</h3>
+                        <p class="text-sm text-gray-400">Oliver Bearman</p>
+                        <p class="text-sm text-gray-400">Esteban Ocon</p>
+                    </div>
+                </div>
+                <!-- Team 9: Kick Sauber -->
+                <div class="team-card-bg rounded-lg shadow-lg team-card-sauber">
+                    <div class="p-6 text-center">
+                        <img src="https://placehold.co/100x50/1E1E1E/52E252?text=Kick+Sauber&font=inter" alt="Kick Sauber Logo" class="h-12 w-auto mx-auto mb-4 rounded">
+                        <h3 class="text-xl font-bold mb-2">Kick Sauber</h3>
+                        <p class="text-sm text-gray-400">Nico Hulkenberg</p>
+                        <p class="text-sm text-gray-400">Gabriel Bortoleto</p>
+                    </div>
+                </div>
+                <!-- Team 10: Alpine -->
+                <div class="team-card-bg rounded-lg shadow-lg team-card-alpine">
+                    <div class="p-6 text-center">
+                        <img src="httpsf://placehold.co/100x50/1E1E1E/0090FF?text=Alpine&font=inter" alt="Alpine Logo" class="h-12 w-auto mx-auto mb-4 rounded">
+                        <h3 class="text-xl font-bold mb-2">Alpine</h3>
+                        <p class="text-sm text-gray-400">Pierre Gasly</p>
+                        <p class="text-sm text-gray-400">Franco Colapinto</p>
+                    </div>
+                </div>
+            </div>
+            <p class="text-xs text-gray-500 text-center mt-4">*Driver lineups based on latest available data and are subject to change.</p>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-black border-t border-gray-800 mt-16">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center text-gray-500">
+            <p class="text-3xl font-black text-gradient mb-4">F1 HUB</p>
+            <p>&copy; 2025 F1 Hub. All rights reserved. This is a concept website.</p>
+            <p class="text-sm mt-2">Formula 1&reg; marks are trade marks of Formula One Licensing B.V.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Mobile Menu and Tabs -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Mobile Menu Toggle
+            const menuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const iconClosed = document.getElementById('menu-icon-closed');
+            const iconOpen = document.getElementById('menu-icon-open');
+
+            menuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+                iconClosed.classList.toggle('hidden');
+                iconClosed.classList.toggle('block');
+                iconOpen.classList.toggle('hidden');
+                iconOpen.classList.toggle('block');
+            });
+
+            // Standings Tabs
+            const tabDrivers = document.getElementById('tab-drivers');
+            const tabConstructors = document.getElementById('tab-constructors');
+            const contentDrivers = document.getElementById('content-drivers');
+            const contentConstructors = document.getElementById('content-constructors');
+
+            tabDrivers.addEventListener('click', () => {
+                // Show drivers content
+                contentDrivers.classList.remove('hidden');
+                // Hide constructors content
+                contentConstructors.classList.add('hidden');
+                
+                // Style driver tab
+                tabDrivers.classList.add('border-red-500', 'text-white');
+                tabDrivers.classList.remove('border-transparent', 'text-gray-500');
+                // Unstyle constructor tab
+                tabConstructors.classList.add('border-transparent', 'text-gray-500');
+                tabConstructors.classList.remove('border-red-500', 'text-white');
+            });
+
+            tabConstructors.addEventListener('click', () => {
+                // Hide drivers content
+                contentDrivers.classList.add('hidden');
+                // Show constructors content
+                contentConstructors.classList.remove('hidden');
+
+                // Style constructor tab
+                tabConstructors.classList.add('border-red-500', 'text-white');
+                tabConstructors.classList.remove('border-transparent', 'text-gray-500');
+                // Unstyle driver tab
+                tabDrivers.classList.add('border-transparent', 'text-gray-500');
+                tabDrivers.classList.remove('border-red-500', 'text-white');
+            });
+
+            // Scroll Animations
+            const sections = document.querySelectorAll('.fade-in-section');
+            
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    }
+                });
+            }, {
+                threshold: 0.1 // Trigger when 10% of the element is visible
+            });
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+        });
+    </script>
+
+</body>
+</html>
+
